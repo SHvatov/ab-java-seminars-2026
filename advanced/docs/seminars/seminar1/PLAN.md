@@ -48,7 +48,7 @@ git checkout -b seminar-01/domain-model
 
 Презентация. Цель — не пересказать учебник, а показать **зачем** и **как принципы работают вместе**. Аудитория продвинутая, поэтому темп выше, определения короче, акцент на взаимосвязи: инкапсуляция как защита инвариантов, наследование как IS-A с ценой каскадных изменений (с намёком на ISP), два вида полиморфизма, и то, как всё это связано в единую систему.
 
-Полный конспект лекции: [`lectures/oop-principles.md`](lectures/oop-principles.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/oop.md`](../../materials/seminar1/oop.md).
+Полный конспект лекции: [`lectures/OOP_PRINCIPLES.md`](lectures/OOP_PRINCIPLES.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/OOP.md`](../../materials/seminar1/OOP.md).
 
 ---
 
@@ -374,7 +374,7 @@ public class Portfolio {
 
 Heap / Non-Heap (Metaspace, Code Cache) / Stack — что где живёт; устройство объекта в памяти (Mark Word + Class Pointer + поля + padding, минимальный объект — 16 байт); где хранятся примитивы, объекты-обёртки и массивы; вопрос-ловушка `int[10][1000]` vs `int[1000][10]`.
 
-Полный конспект лекции: [`lectures/jvm-memory.md`](lectures/jvm-memory.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/java-process-memory-model.md`](../../materials/seminar1/java-process-memory-model.md).
+Полный конспект лекции: [`lectures/JVM_MEMORY.md`](lectures/JVM_MEMORY.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md`](../../materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md).
 
 ---
 
@@ -514,9 +514,9 @@ advanced/src/
 
 ## Материалы
 
-- Лекция (Этап 2): [`lectures/oop-principles.md`](lectures/oop-principles.md)
-- Лекция (Этап 5): [`lectures/jvm-memory.md`](lectures/jvm-memory.md)
-- Самостоятельное изучение: [`docs/materials/seminar1/oop.md`](../../materials/seminar1/oop.md), [`docs/materials/seminar1/java-process-memory-model.md`](../../materials/seminar1/java-process-memory-model.md)
+- Лекция (Этап 2): [`lectures/OOP_PRINCIPLES.md`](lectures/OOP_PRINCIPLES.md)
+- Лекция (Этап 5): [`lectures/JVM_MEMORY.md`](lectures/JVM_MEMORY.md)
+- Самостоятельное изучение: [`docs/materials/seminar1/OOP.md`](../../materials/seminar1/OOP.md), [`docs/materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md`](../../materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md)
 
 ---
 

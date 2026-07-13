@@ -1,7 +1,7 @@
 # Лекция. Устройство памяти в JVM
 
 > Материал для Этапа 5 семинара 1 (продвинутый трек), ~15 минут. За лекцией следует практика с VisualVM и JOL (Этап 6).
-> Расширенная версия — в [материалах для самостоятельного изучения](../../../materials/seminar1/java-process-memory-model.md).
+> Расширенная версия — в [материалах для самостоятельного изучения](../../../materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md).
 
 ---
 
@@ -79,6 +79,6 @@ ref →  [ ref, ref, ..., ref ]     ref →  [ ref, ref, ..., ref ]
 
 ## Связанные материалы
 
-- [Устройство памяти Java-процесса — расширенный материал для самостоятельного изучения](../../../materials/seminar1/java-process-memory-model.md)
+- [Устройство памяти Java-процесса — расширенный материал для самостоятельного изучения](../../../materials/seminar1/JAVA_PROCESS_MEMORY_MODEL.md)
 - [Практика: VisualVM и JOL — `demo/MemoryDemo.java`, `demo/JolDemo.java`](../PLAN.md#этап-6-практика-visualvm-и-jol-25-мин)
 - [План семинара 1](../PLAN.md)

@@ -60,7 +60,7 @@ git branch
 
 Презентация на 10–12 слайдов. Цель — не пересказать учебник, а показать **зачем** и **как принципы работают вместе**: инкапсуляция как защита инвариантов (не просто геттеры/сеттеры), наследование как IS-A с ценой в виде жёсткой связности, два вида полиморфизма (подтипов и перегрузка), и то, как все три принципа дополняют друг друга.
 
-Полный конспект лекции: [`lectures/oop-principles.md`](lectures/oop-principles.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/oop.md`](../../materials/seminar1/oop.md).
+Полный конспект лекции: [`lectures/OOP_PRINCIPLES.md`](lectures/OOP_PRINCIPLES.md). Расширенный материал для самостоятельного изучения: [`docs/materials/seminar1/OOP.md`](../../materials/seminar1/OOP.md).
 
 ---
 
@@ -561,8 +561,8 @@ basic/src/
 
 ## Материалы
 
-- Лекция (Этап 2): [`lectures/oop-principles.md`](lectures/oop-principles.md)
-- Самостоятельное изучение: [`docs/materials/seminar1/oop.md`](../../materials/seminar1/oop.md)
+- Лекция (Этап 2): [`lectures/OOP_PRINCIPLES.md`](lectures/OOP_PRINCIPLES.md)
+- Самостоятельное изучение: [`docs/materials/seminar1/OOP.md`](../../materials/seminar1/OOP.md)
 
 ---
 
