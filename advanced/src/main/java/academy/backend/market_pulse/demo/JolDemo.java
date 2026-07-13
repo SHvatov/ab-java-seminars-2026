@@ -1,11 +1,11 @@
-package ru.tbank.marketpulse.demo;
+package academy.backend.market_pulse.demo;
 
 import java.math.BigDecimal;
 
 import org.openjdk.jol.info.ClassLayout;
 
-import ru.tbank.marketpulse.model.Currency;
-import ru.tbank.marketpulse.model.Stock;
+import academy.backend.market_pulse.model.Currency;
+import academy.backend.market_pulse.model.Stock;
 
 /**
  * Демонстрация для Этапа 6 семинара 1 (JOL): точные размеры объектов и

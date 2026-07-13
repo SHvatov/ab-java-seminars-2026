@@ -87,7 +87,7 @@ Portfolio      (портфель)
 
 #### 4.1. Вспомогательные типы
 
-Итоговый код: [`Currency.java`](../../../src/main/java/ru/tbank/marketpulse/model/Currency.java)
+Итоговый код: [`Currency.java`](../../../src/main/java/academy/backend/market_pulse/model/Currency.java)
 
 ```java
 // model/Currency.java
@@ -98,7 +98,7 @@ public enum Currency {
 
 #### 4.2. Базовый класс — инкапсуляция
 
-Итоговый код: [`Instrument.java`](../../../src/main/java/ru/tbank/marketpulse/model/Instrument.java)
+Итоговый код: [`Instrument.java`](../../../src/main/java/academy/backend/market_pulse/model/Instrument.java)
 
 ```java
 // model/Instrument.java
@@ -153,7 +153,7 @@ public class InstrumentFormatter {
 
 > **Обсуждение:** что не так? Новый тип инструмента → нужно найти и обновить все такие цепочки по всей кодовой базе. Компилятор не предупредит.
 
-Удаляем `InstrumentFormatter`, переносим логику в подклассы. Итоговый код: [`Stock.java`](../../../src/main/java/ru/tbank/marketpulse/model/Stock.java), [`Bond.java`](../../../src/main/java/ru/tbank/marketpulse/model/Bond.java), [`Etf.java`](../../../src/main/java/ru/tbank/marketpulse/model/Etf.java)
+Удаляем `InstrumentFormatter`, переносим логику в подклассы. Итоговый код: [`Stock.java`](../../../src/main/java/academy/backend/market_pulse/model/Stock.java), [`Bond.java`](../../../src/main/java/academy/backend/market_pulse/model/Bond.java), [`Etf.java`](../../../src/main/java/academy/backend/market_pulse/model/Etf.java)
 
 ```java
 // model/Stock.java
@@ -260,7 +260,7 @@ public BigDecimal getDividends(BigDecimal currentPrice) {
 }
 ```
 
-> **Обсуждение:** оба варианта нарушают LSP. Метод не принадлежит базовому классу — убираем его из `Instrument`, оставляем только в `Stock`. Именно так и сделано в итоговом [`Stock.java`](../../../src/main/java/ru/tbank/marketpulse/model/Stock.java).
+> **Обсуждение:** оба варианта нарушают LSP. Метод не принадлежит базовому классу — убираем его из `Instrument`, оставляем только в `Stock`. Именно так и сделано в итоговом [`Stock.java`](../../../src/main/java/academy/backend/market_pulse/model/Stock.java).
 
 #### 4.6. Агрегация vs композиция — через StockSnapshot → Quote
 
@@ -295,7 +295,7 @@ public class StockSnapshot extends Stock {
 
 > **Обсуждение:** перегрузка не заменяет переопределение. Контракт родителя нарушен — это снова LSP. `StockSnapshot` — не вид `Stock`, это `Stock` + рыночная цена в момент времени. Переименовываем в `Quote` и делаем агрегацию.
 
-Итоговый код: [`Quote.java`](../../../src/main/java/ru/tbank/marketpulse/model/Quote.java)
+Итоговый код: [`Quote.java`](../../../src/main/java/academy/backend/market_pulse/model/Quote.java)
 
 ```java
 // model/Quote.java — агрегация
@@ -332,7 +332,7 @@ public class Quote {
 }
 ```
 
-**Композиция для контраста** — `Portfolio` создаёт и владеет `Position`. Итоговый код: [`Portfolio.java`](../../../src/main/java/ru/tbank/marketpulse/model/Portfolio.java)
+**Композиция для контраста** — `Portfolio` создаёт и владеет `Position`. Итоговый код: [`Portfolio.java`](../../../src/main/java/academy/backend/market_pulse/model/Portfolio.java)
 
 ```java
 // model/Portfolio.java
@@ -382,7 +382,7 @@ Heap / Non-Heap (Metaspace, Code Cache) / Stack — что где живёт; у
 
 #### 6.1. VisualVM — мониторинг в реальном времени (~10 мин)
 
-Пишем простую программу, которая создаёт оба массива и держит их в памяти. Итоговый код: [`MemoryDemo.java`](../../../src/main/java/ru/tbank/marketpulse/demo/MemoryDemo.java)
+Пишем простую программу, которая создаёт оба массива и держит их в памяти. Итоговый код: [`MemoryDemo.java`](../../../src/main/java/academy/backend/market_pulse/demo/MemoryDemo.java)
 
 ```java
 // demo/MemoryDemo.java
@@ -430,7 +430,7 @@ public class MemoryDemo {
 
 > **Акцент:** это хороший момент объяснить, что такое Maven-координаты (`groupId:artifactId:version`), где их искать (Maven Central), и как IntelliJ IDEA автоматически скачивает зависимости после изменения `pom.xml`.
 
-**Смотрим на наши сущности.** Итоговый код: [`JolDemo.java`](../../../src/main/java/ru/tbank/marketpulse/demo/JolDemo.java)
+**Смотрим на наши сущности.** Итоговый код: [`JolDemo.java`](../../../src/main/java/academy/backend/market_pulse/demo/JolDemo.java)
 
 ```java
 // demo/JolDemo.java
@@ -491,7 +491,7 @@ Instance size: 16 bytes
 advanced/src/
 └── main/
     └── java/
-        └── ru/tbank/marketpulse/
+        └── academy/backend/market_pulse/
             ├── model/
             │   ├── Currency.java
             │   ├── Instrument.java      ← абстрактный базовый класс
@@ -508,7 +508,7 @@ advanced/src/
 
 > Пакет `model` содержит доменные сущности. Пакет `demo` — временная точка входа для проверки модели и демонстрации поведения в памяти JVM; в следующих семинарах он будет заменён полноценным CLI.
 
-Ссылки на итоговый код: [`model/`](../../../src/main/java/ru/tbank/marketpulse/model/), [`demo/`](../../../src/main/java/ru/tbank/marketpulse/demo/)
+Ссылки на итоговый код: [`model/`](../../../src/main/java/academy/backend/market_pulse/model/), [`demo/`](../../../src/main/java/academy/backend/market_pulse/demo/)
 
 ---
 

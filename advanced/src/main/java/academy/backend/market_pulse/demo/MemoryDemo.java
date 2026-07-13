@@ -1,4 +1,4 @@
-package ru.tbank.marketpulse.demo;
+package academy.backend.market_pulse.demo;
 
 import java.io.IOException;
 

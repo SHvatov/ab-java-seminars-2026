@@ -102,7 +102,7 @@ Portfolio      (портфель пользователя)
 
 #### 4.1. Вспомогательные типы
 
-Итоговый код: [`Currency.java`](../../../src/main/java/ru/tbank/marketpulse/model/Currency.java)
+Итоговый код: [`Currency.java`](../../../src/main/java/academy/backend/market_pulse/model/Currency.java)
 
 ```java
 // model/Currency.java
@@ -117,7 +117,7 @@ public enum Currency {
 
 Обсуждаем: почему поля `private`? Почему нет сеттеров? Ticker не должен меняться — это инвариант.
 
-Итоговый код: [`Instrument.java`](../../../src/main/java/ru/tbank/marketpulse/model/Instrument.java)
+Итоговый код: [`Instrument.java`](../../../src/main/java/academy/backend/market_pulse/model/Instrument.java)
 
 ```java
 // model/Instrument.java
@@ -219,7 +219,7 @@ public class InstrumentFormatter {
 
 Удаляем `InstrumentFormatter`, удаляем `InstrumentType`. Переносим логику описания в каждый подкласс — туда, где про него всё известно.
 
-Итоговый код: [`Stock.java`](../../../src/main/java/ru/tbank/marketpulse/model/Stock.java), [`Bond.java`](../../../src/main/java/ru/tbank/marketpulse/model/Bond.java), [`Etf.java`](../../../src/main/java/ru/tbank/marketpulse/model/Etf.java)
+Итоговый код: [`Stock.java`](../../../src/main/java/academy/backend/market_pulse/model/Stock.java), [`Bond.java`](../../../src/main/java/academy/backend/market_pulse/model/Bond.java), [`Etf.java`](../../../src/main/java/academy/backend/market_pulse/model/Etf.java)
 
 ```java
 // model/Stock.java
@@ -356,7 +356,7 @@ public BigDecimal getDividends(BigDecimal currentPrice) {
 }
 ```
 
-> **Обсуждение:** оба варианта плохие. `BigDecimal.ZERO` — молчаливо искажает расчёты. `UnsupportedOperationException` — нарушает LSP: код, работающий с `List<Instrument>`, не может безопасно вызвать метод, не проверяя конкретный тип. Это сигнал, что `getDividends` не принадлежит базовому классу — он специфичен только для `Stock`. Правильное решение: убрать метод из `Instrument`, оставить только в `Stock`. Именно так и сделано в итоговом [`Stock.java`](../../../src/main/java/ru/tbank/marketpulse/model/Stock.java) — метод `getDividends(BigDecimal)` есть только там.
+> **Обсуждение:** оба варианта плохие. `BigDecimal.ZERO` — молчаливо искажает расчёты. `UnsupportedOperationException` — нарушает LSP: код, работающий с `List<Instrument>`, не может безопасно вызвать метод, не проверяя конкретный тип. Это сигнал, что `getDividends` не принадлежит базовому классу — он специфичен только для `Stock`. Правильное решение: убрать метод из `Instrument`, оставить только в `Stock`. Именно так и сделано в итоговом [`Stock.java`](../../../src/main/java/academy/backend/market_pulse/model/Stock.java) — метод `getDividends(BigDecimal)` есть только там.
 
 #### 4.7. Агрегация vs композиция
 
@@ -401,7 +401,7 @@ public class StockSnapshot extends Stock {
 
 Проблема в том, что `StockSnapshot` — это не вид `Stock`. Это `Stock` плюс рыночная цена в момент времени. Переименовываем класс в `Quote` и убираем наследование: `Quote` хранит ссылку на `Stock`, но не является им.
 
-Итоговый код: [`Quote.java`](../../../src/main/java/ru/tbank/marketpulse/model/Quote.java)
+Итоговый код: [`Quote.java`](../../../src/main/java/academy/backend/market_pulse/model/Quote.java)
 
 ```java
 // model/Quote.java — агрегация вместо наследования
@@ -454,7 +454,7 @@ public class Quote {
 
 Для контраста показываем другой тип отношения. `Portfolio` владеет `Position` — позиция не имеет смысла в отрыве от портфеля и создаётся только внутри него.
 
-Итоговый код: [`Portfolio.java`](../../../src/main/java/ru/tbank/marketpulse/model/Portfolio.java)
+Итоговый код: [`Portfolio.java`](../../../src/main/java/academy/backend/market_pulse/model/Portfolio.java)
 
 ```java
 // model/Portfolio.java
@@ -540,7 +540,7 @@ git push origin seminar-01/domain-model
 basic/src/
 └── main/
     └── java/
-        └── ru/tbank/marketpulse/
+        └── academy/backend/market_pulse/
             ├── model/
             │   ├── Currency.java
             │   ├── Instrument.java    ← абстрактный базовый класс
@@ -555,7 +555,7 @@ basic/src/
 
 > Пакет `model` содержит доменные сущности приложения. `InstrumentType` убран — его роль выполняет иерархия классов. Пакет `demo` — временная точка входа для проверки модели; в следующих семинарах он будет заменён полноценным CLI.
 
-Ссылки на итоговый код: [`model/`](../../../src/main/java/ru/tbank/marketpulse/model/), [`demo/Main.java`](../../../src/main/java/ru/tbank/marketpulse/demo/Main.java)
+Ссылки на итоговый код: [`model/`](../../../src/main/java/academy/backend/market_pulse/model/), [`demo/Main.java`](../../../src/main/java/academy/backend/market_pulse/demo/Main.java)
 
 ---
 

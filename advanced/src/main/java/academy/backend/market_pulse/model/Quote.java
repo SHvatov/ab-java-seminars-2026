@@ -1,4 +1,4 @@
-package ru.tbank.marketpulse.model;
+package academy.backend.market_pulse.model;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package ru.tbank.marketpulse.model;
+package academy.backend.market_pulse.model;
 
 /**
  * Базовая абстракция финансового инструмента. Инкапсулирует общие для всех

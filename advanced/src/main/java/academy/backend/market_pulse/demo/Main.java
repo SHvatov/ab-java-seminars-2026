@@ -1,15 +1,15 @@
-package ru.tbank.marketpulse.demo;
+package academy.backend.market_pulse.demo;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import ru.tbank.marketpulse.model.Bond;
-import ru.tbank.marketpulse.model.Currency;
-import ru.tbank.marketpulse.model.Etf;
-import ru.tbank.marketpulse.model.Instrument;
-import ru.tbank.marketpulse.model.Portfolio;
-import ru.tbank.marketpulse.model.Quote;
-import ru.tbank.marketpulse.model.Stock;
+import academy.backend.market_pulse.model.Bond;
+import academy.backend.market_pulse.model.Currency;
+import academy.backend.market_pulse.model.Etf;
+import academy.backend.market_pulse.model.Instrument;
+import academy.backend.market_pulse.model.Portfolio;
+import academy.backend.market_pulse.model.Quote;
+import academy.backend.market_pulse.model.Stock;
 
 /**
  * Временная точка входа для проверки доменной модели семинара 1: работает
