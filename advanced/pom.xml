@@ -12,4 +12,13 @@
 
     <artifactId>advanced</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- Java Object Layout: точные размеры и раскладка объектов в памяти (семинар 1, этап 6) -->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.17</version>
+        </dependency>
+    </dependencies>
 </project>
