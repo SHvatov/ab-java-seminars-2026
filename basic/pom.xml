@@ -12,4 +12,13 @@
 
     <artifactId>basic</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- Разбор аргументов командной строки (семинар 2, этап 2) -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.7.7</version>
+        </dependency>
+    </dependencies>
 </project>
