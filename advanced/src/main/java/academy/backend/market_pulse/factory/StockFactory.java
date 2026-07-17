@@ -8,8 +8,9 @@ import academy.backend.market_pulse.model.Stock;
 
 public class StockFactory implements InstrumentFactory {
 
-    static {
-        InstrumentFactories.register("STOCK", new StockFactory());
+    @Override
+    public String getSupportedType() {
+        return "STOCK";
     }
 
     @Override

@@ -40,7 +40,11 @@ public class Quote {
 
     @Override
     public String toString() {
-        String direction = changePercent.signum() >= 0 ? "▲" : "▼";
+        String direction = switch (changePercent.signum()) {
+            case 1 -> "▲";
+            case -1 -> "▼";
+            default -> "▬";
+        };
         return instrument.getTicker() + ": " + price + " " + instrument.getCurrency()
                 + " " + direction + " " + changePercent.abs() + "%";
     }

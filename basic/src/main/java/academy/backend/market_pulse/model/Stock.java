@@ -1,6 +1,7 @@
 package academy.backend.market_pulse.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Акция. В отличие от {@link Bond} и {@link Etf}, только у акций есть
@@ -30,7 +31,7 @@ public class Stock extends Instrument implements DividendPaying {
     @Override
     public BigDecimal getDividends(BigDecimal currentPrice) {
         return currentPrice.multiply(dividendYield)
-                .divide(BigDecimal.valueOf(100));
+                .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
     }
 
     @Override
