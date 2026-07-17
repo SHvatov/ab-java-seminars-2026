@@ -6,8 +6,9 @@ import academy.backend.market_pulse.model.Instrument;
 
 public class EtfFactory implements InstrumentFactory {
 
-    static {
-        InstrumentFactories.register("ETF", new EtfFactory());
+    @Override
+    public String getSupportedType() {
+        return "ETF";
     }
 
     @Override

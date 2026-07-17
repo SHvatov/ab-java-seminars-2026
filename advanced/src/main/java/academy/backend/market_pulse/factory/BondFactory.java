@@ -9,8 +9,9 @@ import academy.backend.market_pulse.model.Instrument;
 
 public class BondFactory implements InstrumentFactory {
 
-    static {
-        InstrumentFactories.register("BOND", new BondFactory());
+    @Override
+    public String getSupportedType() {
+        return "BOND";
     }
 
     @Override

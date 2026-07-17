@@ -1,30 +1,23 @@
 package academy.backend.market_pulse.factory;
 
+import java.util.ServiceLoader;
+
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.util.Registry;
 
 /**
- * Реестр фабрик инструментов. Каждая фабрика регистрирует себя сама при загрузке своего класса —
- * по аналогии с {@code DriverManager} в JDBC.
+ * Реестр фабрик инструментов. Реализации {@link InstrumentFactory} не перечислены здесь явно —
+ * они обнаруживаются через {@link ServiceLoader} по файлу
+ * {@code META-INF/services/academy.backend.market_pulse.factory.InstrumentFactory}. Добавление
+ * нового типа инструмента сводится к реализации нового {@link InstrumentFactory} и добавлению
+ * одной строки в этот файл — ни этот класс, ни существующие фабрики не изменяются.
  */
 public final class InstrumentFactories {
 
-    private static final Registry<String, InstrumentFactory> REGISTRY = new Registry<>();
-
-    static {
-        // Статический блок фабрики выполняется только при загрузке её класса — форсируем загрузку,
-        // иначе реестр останется пустым (тот же нюанс, что и с DriverManager до JDBC 4.0).
-        loadClass(StockFactory.class);
-        loadClass(BondFactory.class);
-        loadClass(EtfFactory.class);
-    }
+    private static final Registry<String, InstrumentFactory> REGISTRY = loadRegistry();
 
     private InstrumentFactories() {
-    }
-
-    public static void register(String type, InstrumentFactory factory) {
-        REGISTRY.register(type.toUpperCase(), factory);
     }
 
     public static Instrument create(String type, String ticker, String name, Currency currency) {
@@ -33,11 +26,11 @@ public final class InstrumentFactories {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown instrument type: " + type));
     }
 
-    private static void loadClass(Class<?> factoryClass) {
-        try {
-            Class.forName(factoryClass.getName());
-        } catch (ClassNotFoundException e) {
-            throw new ExceptionInInitializerError(e);
+    private static Registry<String, InstrumentFactory> loadRegistry() {
+        Registry<String, InstrumentFactory> registry = new Registry<>();
+        for (InstrumentFactory factory : ServiceLoader.load(InstrumentFactory.class)) {
+            registry.register(factory.getSupportedType().toUpperCase(), factory);
         }
+        return registry;
     }
 }
