@@ -38,6 +38,18 @@
             <artifactId>vavr</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <!-- Иммутабельные коллекции и Multimap (семинар 5, этап 6) -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.4.0-jre</version>
+        </dependency>
+        <!-- Мультимножества и теоретико-множественные операции над коллекциями (семинар 5, этап 6) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
         <!-- Микробенчмарки: стоимость исключений (семинар 4, этап 5) -->
         <dependency>
             <groupId>org.openjdk.jmh</groupId>

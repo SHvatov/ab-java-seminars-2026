@@ -1,56 +1,37 @@
 package academy.backend.market_pulse.repository;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import academy.backend.market_pulse.exception.DuplicateTickerException;
 import academy.backend.market_pulse.model.Instrument;
 
 /**
- * Хранилище инструментов поверх внутреннего массива фиксированного размера. Перебор — через
- * {@link Iterable}/{@link Iterator}, без раскрытия массива наружу (см. «План семинара.md»,
- * семинар 2, этап 4 — Iterator). Заглушка: подключение реального источника данных запланировано
- * на семинар 5.
+ * In-memory хранилище инструментов, проиндексированных по тикеру. Массив-заглушка из семинара 2
+ * заменён на {@link LinkedHashMap}: поиск и проверка дубликата — за O(1) вместо линейного перебора,
+ * порядок добавления сохраняется для вывода. Ключ нормализуется к верхнему регистру, чтобы поиск
+ * оставался регистронезависимым (см. «План семинара.md», семинар 5, этап 3).
  */
 public class InstrumentRepository implements Iterable<Instrument> {
 
-    private final Instrument[] instruments = new Instrument[100];
-    private int size = 0;
+    private final Map<String, Instrument> instruments = new LinkedHashMap<>();
 
     public void add(Instrument instrument) {
-        if (findByTicker(instrument.getTicker()).isPresent()) {
+        String key = instrument.getTicker().toUpperCase();
+        if (instruments.containsKey(key)) {
             throw new DuplicateTickerException(instrument.getTicker());
         }
-        instruments[size++] = instrument;
+        instruments.put(key, instrument);
     }
 
     public Optional<Instrument> findByTicker(String ticker) {
-        for (Instrument instrument : this) {
-            if (instrument.getTicker().equalsIgnoreCase(ticker)) {
-                return Optional.of(instrument);
-            }
-        }
-        return Optional.empty();
+        return Optional.ofNullable(instruments.get(ticker.toUpperCase()));
     }
 
     @Override
     public Iterator<Instrument> iterator() {
-        return new Iterator<>() {
-            private int cursor = 0;
-
-            @Override
-            public boolean hasNext() {
-                return cursor < size;
-            }
-
-            @Override
-            public Instrument next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                return instruments[cursor++];
-            }
-        };
+        return instruments.values().iterator();
     }
 }
