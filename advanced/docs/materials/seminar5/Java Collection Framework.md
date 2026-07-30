@@ -11,7 +11,7 @@
 5. HashMap под капотом
 6. Другие реализации Map: LinkedHashMap и TreeMap
 7. Выбор структуры: асимптотика, константа, кеш
-8. За пределами java.util: Guava, Apache Commons, примитивные коллекции
+8. За пределами java.util: Guava, Vavr, Apache Commons, примитивные коллекции
 9. Итераторы, fail-fast и ConcurrentModificationException
 
 ---
@@ -231,7 +231,7 @@ void example() {
 
 ---
 
-## 8. За пределами java.util: Guava, Apache Commons, примитивные коллекции
+## 8. За пределами java.util: Guava, Vavr, Apache Commons, примитивные коллекции
 
 Стандартный JCF закрывает большинство задач, но экосистема даёт специализированные коллекции.
 
@@ -252,6 +252,25 @@ void example() {
 лишь оборачивает изменяемый оригинал (тот за обёрткой всё ещё может измениться). `Multimap` заменяет ручной
 `Map<K, List<V>>` с инициализацией списка при первом добавлении.
 
+**Vavr.**
+
+```java
+void example() {
+    io.vavr.collection.List<String> watchlist = io.vavr.collection.List.of("SBER", "GAZP");
+    io.vavr.collection.List<String> extended = watchlist.append("LKOH");
+    // watchlist остался List(SBER, GAZP); extended — List(SBER, GAZP, LKOH)
+
+    io.vavr.collection.Map<String, Integer> weights = io.vavr.collection.HashMap.of("SBER", 40);
+    io.vavr.collection.Map<String, Integer> updated = weights.put("GAZP", 60); // старый map неизменен
+}
+```
+
+Vavr идёт дальше иммутабельности Guava: его коллекции *персистентны*. `ImmutableMap` — неизменяемая, но одноразовая
+копия (менять нельзя вообще); коллекция Vavr на каждую «модификацию» (`append`/`put`) возвращает новую версию, а
+старая продолжает существовать, и обе дёшево делят общие внутренние узлы (structural sharing — не полное копирование).
+Это тот же безопасный от побочных эффектов стиль, что и `Optional`/`Try`, но для коллекций: значение нельзя изменить
+незаметно для владельца ссылки.
+
 **Apache Commons Collections.**
 
 ```java
@@ -268,10 +287,25 @@ void example() {
 `CollectionUtils` даёт теоретико-множественные операции (`union`, `intersection`, `subtract`); `Bag` — мультимножество,
 считающее вхождения; `MultiValuedMap` — аналог Guava `Multimap`.
 
-**Примитивные коллекции (FastUtils, Eclipse Collections).** Стандартные коллекции хранят объекты, поэтому `int`
-превращается в `Integer` (boxing) — лишняя память и разыменование. Примитивные коллекции хранят `int`/`long`/`double`
-напрямую, экономя память и повышая локальность; выигрыш особенно заметен на больших объёмах и виден на раскладке
-объектов через JOL. Цена — дополнительная зависимость и специализированный API.
+**Примитивные коллекции (fastutil, Eclipse Collections, Trove).**
+
+```java
+void example() {
+    // double[] под капотом — без обёрток Double и boxing на каждый элемент
+    DoubleArrayList prices = new DoubleArrayList();
+    prices.add(250.00);
+    double last = prices.getDouble(prices.size() - 1); // примитив, без unboxing
+
+    // ключ хранится как int[], а не как Integer[]
+    Int2ObjectMap<Instrument> byId = new Int2ObjectOpenHashMap<>();
+    byId.put(1, sber);
+}
+```
+
+Стандартные коллекции хранят объекты, поэтому `int` превращается в `Integer` (boxing) — лишняя память и
+разыменование. Примитивные коллекции хранят `int`/`long`/`double` напрямую, экономя память и повышая локальность;
+выигрыш особенно заметен на больших объёмах и виден на раскладке объектов через JOL. Цена — дополнительная зависимость
+и специализированный API; на малых коллекциях выигрыша нет.
 
 Вывод: внешняя коллекция оправдана под конкретную нужду (иммутабельность, мультиотображение, экономия памяти), а не
 как замена `java.util` по умолчанию.
