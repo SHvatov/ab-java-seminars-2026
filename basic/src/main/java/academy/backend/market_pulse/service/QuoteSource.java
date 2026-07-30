@@ -1,5 +1,7 @@
 package academy.backend.market_pulse.service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,5 +22,13 @@ public class QuoteSource {
 
     public Optional<Quote> fetch(String ticker) {
         return Optional.ofNullable(data.get(ticker.toUpperCase()));
+    }
+
+    /**
+     * Все доступные котировки — «снимок рынка» для агрегатных команд (`stats`, `movers`). Отдаётся
+     * неизменяемым представлением, чтобы вызывающий код не менял внутренние данные заглушки.
+     */
+    public Collection<Quote> all() {
+        return Collections.unmodifiableCollection(data.values());
     }
 }

@@ -1,10 +1,10 @@
 package academy.backend.market_pulse.cli;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
@@ -44,12 +44,9 @@ public class ListCommand implements Callable<Integer> {
             filter = filter.and(instrument -> instrument.getCurrency() == currency);
         }
 
-        List<Instrument> matched = new ArrayList<>();
-        for (Instrument instrument : repository) {
-            if (filter.test(instrument)) {
-                matched.add(instrument);
-            }
-        }
+        List<Instrument> matched = repository.stream()
+                .filter(filter)
+                .collect(Collectors.toList());
 
         if (sortByTicker) {
             matched.sort(Comparator.comparing(Instrument::getTicker));

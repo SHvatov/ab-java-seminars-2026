@@ -1,6 +1,7 @@
 package academy.backend.market_pulse.repository;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import academy.backend.market_pulse.model.Instrument;
 
@@ -14,4 +15,10 @@ public interface InstrumentRepository extends Iterable<Instrument> {
     void add(Instrument instrument);
 
     Optional<Instrument> findByTicker(String ticker);
+
+    /**
+     * Потоковый доступ к инструментам — вход в Stream API для декларативной фильтрации, сортировки
+     * и агрегации (см. «План семинара.md», семинар 6).
+     */
+    Stream<Instrument> stream();
 }

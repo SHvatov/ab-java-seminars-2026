@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import academy.backend.market_pulse.exception.DuplicateTickerException;
 import academy.backend.market_pulse.model.Instrument;
@@ -28,6 +29,14 @@ public class InstrumentRepository implements Iterable<Instrument> {
 
     public Optional<Instrument> findByTicker(String ticker) {
         return Optional.ofNullable(instruments.get(ticker.toUpperCase()));
+    }
+
+    /**
+     * Потоковый доступ к инструментам — вход в Stream API для декларативной фильтрации, сортировки
+     * и агрегации (см. «План семинара.md», семинар 6). Порядок совпадает с порядком добавления.
+     */
+    public Stream<Instrument> stream() {
+        return instruments.values().stream();
     }
 
     @Override

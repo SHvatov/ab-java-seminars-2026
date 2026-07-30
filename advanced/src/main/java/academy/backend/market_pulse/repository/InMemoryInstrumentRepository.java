@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import academy.backend.market_pulse.exception.DuplicateTickerException;
 import academy.backend.market_pulse.model.Instrument;
@@ -32,6 +33,11 @@ public class InMemoryInstrumentRepository implements InstrumentRepository {
     @Override
     public Optional<Instrument> findByTicker(String ticker) {
         return Optional.ofNullable(instruments.get(ticker.toUpperCase()));
+    }
+
+    @Override
+    public Stream<Instrument> stream() {
+        return instruments.values().stream();
     }
 
     @Override
