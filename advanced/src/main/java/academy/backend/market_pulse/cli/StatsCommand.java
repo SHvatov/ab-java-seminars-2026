@@ -1,5 +1,6 @@
 package academy.backend.market_pulse.cli;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -38,9 +39,15 @@ public class StatsCommand implements Callable<Integer> {
                 .average()
                 .orElse(0.0);
 
+        // Денежная сумма — через reduce над BigDecimal, а не mapToDouble().sum(): точность сохраняется.
+        BigDecimal totalPrice = quotes.stream()
+                .map(Quote::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         byType.forEach((type, count) -> System.out.println(type + ": " + count));
         byCurrency.forEach((currency, count) -> System.out.println(currency + ": " + count));
         System.out.printf("Средняя доходность: %.2f%%%n", avgChange);
+        System.out.println("Суммарная цена инструментов: " + totalPrice);
         return 0;
     }
 }
