@@ -74,5 +74,37 @@
             <version>1.37</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Тестирование (семинар 8) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.14.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Мутационное тестирование (семинар 8, этап 4): mvn org.pitest:pitest-maven:mutationCoverage -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.20.4</version>
+                <configuration>
+                    <targetClasses>
+                        <param>academy.backend.market_pulse.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>academy.backend.market_pulse.*</param>
+                    </targetTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

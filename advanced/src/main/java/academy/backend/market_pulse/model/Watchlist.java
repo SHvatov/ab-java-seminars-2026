@@ -17,6 +17,14 @@ public class Watchlist {
         return tickers.add(ticker.toUpperCase());
     }
 
+    /**
+     * Убирает тикер из watchlist. Возвращает {@code true}, если тикер отслеживался и был удалён
+     * (см. «План семинара.md», семинар 8, этап 2 — разработка через тесты).
+     */
+    public boolean remove(String ticker) {
+        return tickers.remove(ticker.toUpperCase());
+    }
+
     public boolean contains(String ticker) {
         return tickers.contains(ticker.toUpperCase());
     }
