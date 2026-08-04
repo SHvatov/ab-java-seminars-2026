@@ -1,5 +1,6 @@
 package academy.backend.market_pulse.cli;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import academy.backend.market_pulse.exception.DuplicateTickerException;
@@ -7,6 +8,7 @@ import academy.backend.market_pulse.factory.InstrumentFactories;
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.repository.InstrumentRepository;
+import academy.backend.market_pulse.storage.InstrumentStorage;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -26,9 +28,11 @@ public class AddCommand implements Callable<Integer> {
     private Currency currency;
 
     private final InstrumentRepository repository;
+    private final InstrumentStorage storage;
 
-    public AddCommand(InstrumentRepository repository) {
+    public AddCommand(InstrumentRepository repository, InstrumentStorage storage) {
         this.repository = repository;
+        this.storage = storage;
     }
 
     @Override
@@ -36,10 +40,14 @@ public class AddCommand implements Callable<Integer> {
         try {
             Instrument instrument = InstrumentFactories.create(type, ticker, name, currency);
             repository.add(instrument);
+            storage.save(instrument);   // сохраняем на диск — переживёт перезапуск (семинар 7)
             System.out.println("Добавлено: " + instrument.getDescription());
             return 0;
         } catch (DuplicateTickerException | IllegalArgumentException e) {
             System.out.println("Не удалось добавить инструмент: " + e.getMessage());
+            return 1;
+        } catch (IOException e) {
+            System.out.println("Инструмент добавлен в память, но не сохранён на диск: " + e.getMessage());
             return 1;
         }
     }

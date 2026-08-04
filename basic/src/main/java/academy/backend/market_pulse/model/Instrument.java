@@ -1,10 +1,22 @@
 package academy.backend.market_pulse.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * Базовая абстракция финансового инструмента. Инкапсулирует общие для всех
  * инструментов данные (тикер, название, валюта) и защищает их инварианты
  * прямо в конструкторе.
+ *
+ * <p>Аннотации Jackson задают полиморфную сериализацию в JSON (см. «План семинара.md», семинар 7,
+ * этап 2): в файл пишется поле {@code type}, по которому при чтении выбирается конкретный подкласс.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Stock.class, name = "STOCK"),
+        @JsonSubTypes.Type(value = Bond.class, name = "BOND"),
+        @JsonSubTypes.Type(value = Etf.class, name = "ETF")
+})
 public abstract class Instrument {
 
     private final String ticker;

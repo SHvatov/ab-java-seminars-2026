@@ -1,8 +1,10 @@
 package academy.backend.market_pulse.cli;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import academy.backend.market_pulse.model.Watchlist;
+import academy.backend.market_pulse.storage.WatchlistStorage;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -13,9 +15,11 @@ public class WatchCommand implements Callable<Integer> {
     private String ticker;
 
     private final Watchlist watchlist;
+    private final WatchlistStorage storage;
 
-    public WatchCommand(Watchlist watchlist) {
+    public WatchCommand(Watchlist watchlist, WatchlistStorage storage) {
         this.watchlist = watchlist;
+        this.storage = storage;
     }
 
     @Override
@@ -25,6 +29,11 @@ public class WatchCommand implements Callable<Integer> {
             System.out.println(added
                     ? "Добавлено в watchlist: " + ticker.toUpperCase()
                     : "Уже отслеживается: " + ticker.toUpperCase());
+            try {
+                storage.save(watchlist.tickers());   // сохраняем watchlist на диск (семинар 7)
+            } catch (IOException e) {
+                System.out.println("Не удалось сохранить watchlist: " + e.getMessage());
+            }
         }
         System.out.println("Watchlist: " + watchlist.tickers());
         return 0;

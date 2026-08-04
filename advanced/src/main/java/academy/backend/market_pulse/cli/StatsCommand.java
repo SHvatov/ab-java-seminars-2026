@@ -1,28 +1,40 @@
 package academy.backend.market_pulse.cli;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Quote;
-import academy.backend.market_pulse.service.QuoteSource;
+import academy.backend.market_pulse.model.Watchlist;
+import academy.backend.market_pulse.service.QuoteService;
 import picocli.CommandLine.Command;
 
-@Command(name = "stats", description = "Сводка по котировкам: распределение по типу и валюте, средняя доходность")
+@Command(name = "stats", description = "Сводка по котировкам отслеживаемых инструментов (watchlist): типы, валюты, доходность")
 public class StatsCommand implements Callable<Integer> {
 
-    private final QuoteSource source;
+    private final Watchlist watchlist;
+    private final QuoteService quoteService;
 
-    public StatsCommand(QuoteSource source) {
-        this.source = source;
+    public StatsCommand(Watchlist watchlist, QuoteService quoteService) {
+        this.watchlist = watchlist;
+        this.quoteService = quoteService;
     }
 
     @Override
     public Integer call() {
-        Collection<Quote> quotes = source.all();
+        List<Quote> quotes = watchlist.tickers().stream()
+                .map(quoteService::quoteFor)
+                .flatMap(Optional::stream)
+                .toList();
+
+        if (quotes.isEmpty()) {
+            System.out.println("Нет данных: watchlist пуст или котировки недоступны.");
+            return 0;
+        }
 
         Map<String, Long> byType = quotes.stream()
                 .collect(Collectors.groupingBy(

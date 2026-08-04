@@ -1,14 +1,16 @@
 package academy.backend.market_pulse.cli;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import academy.backend.market_pulse.model.Quote;
-import academy.backend.market_pulse.service.QuoteSource;
+import academy.backend.market_pulse.model.Watchlist;
+import academy.backend.market_pulse.service.QuoteService;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "movers", description = "Топ инструментов по изменению цены (по умолчанию — растущие)")
+@Command(name = "movers", description = "Топ отслеживаемых инструментов (watchlist) по изменению цены")
 public class MoversCommand implements Callable<Integer> {
 
     @Option(names = "--top", description = "Сколько инструментов показать (по умолчанию 5)")
@@ -17,16 +19,20 @@ public class MoversCommand implements Callable<Integer> {
     @Option(names = "--losers", description = "Показать сильнее всего упавшие вместо выросших")
     private boolean losers;
 
-    private final QuoteSource source;
+    private final Watchlist watchlist;
+    private final QuoteService quoteService;
 
-    public MoversCommand(QuoteSource source) {
-        this.source = source;
+    public MoversCommand(Watchlist watchlist, QuoteService quoteService) {
+        this.watchlist = watchlist;
+        this.quoteService = quoteService;
     }
 
     @Override
     public Integer call() {
         Comparator<Quote> byChange = Comparator.comparing(Quote::getChangePercent);
-        source.all().stream()
+        watchlist.tickers().stream()
+                .map(quoteService::quoteFor)
+                .flatMap(Optional::stream)
                 .sorted(losers ? byChange : byChange.reversed())
                 .limit(top)
                 .forEach(quote -> System.out.println(quote));
