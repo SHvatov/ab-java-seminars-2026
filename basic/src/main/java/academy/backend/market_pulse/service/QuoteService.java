@@ -1,7 +1,9 @@
 package academy.backend.market_pulse.service;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
@@ -51,5 +53,17 @@ public class QuoteService {
         request(ticker);
         processAll();
         return cached(ticker);
+    }
+
+    /**
+     * Котировки по набору тикеров: ненайденные пропускаются, порядок исходных тикеров сохраняется.
+     * Выделено из команд `stats`/`movers`/`compare`, где этот конвейер дублировался
+     * (см. «План семинара.md», семинар 9, этап 2 — устранение дублирования).
+     */
+    public List<Quote> quotesFor(Collection<String> tickers) {
+        return tickers.stream()
+                .map(this::quoteFor)
+                .flatMap(Optional::stream)
+                .toList();
     }
 }

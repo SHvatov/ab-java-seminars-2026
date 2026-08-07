@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -55,5 +56,25 @@ class QuoteServiceTest {
         QuoteService service = new QuoteService(source);
 
         assertTrue(service.quoteFor("XXX").isEmpty());
+    }
+
+    @Test
+    void quotesForПропускаетНенайденныеИСохраняетПорядок() {
+        Quote sber = sberQuote();
+        Quote lkoh = new Quote(
+                new Stock("LKOH", "Лукойл", Currency.RUB, "Oil", new BigDecimal("5")),
+                new BigDecimal("7000"), new BigDecimal("2"));
+
+        QuoteSource source = mock(QuoteSource.class);
+        when(source.fetch("SBER")).thenReturn(Optional.of(sber));
+        when(source.fetch("XXX")).thenReturn(Optional.empty());   // ненайденный — пропускается
+        when(source.fetch("LKOH")).thenReturn(Optional.of(lkoh));
+
+        QuoteService service = new QuoteService(source);
+        List<Quote> quotes = service.quotesFor(List.of("SBER", "XXX", "LKOH"));
+
+        // XXX выпал, порядок исходных тикеров сохранён. Замена flatMap(Optional::stream)
+        // на map(Optional::get) уронила бы этот тест на "XXX".
+        assertEquals(List.of(sber, lkoh), quotes);
     }
 }

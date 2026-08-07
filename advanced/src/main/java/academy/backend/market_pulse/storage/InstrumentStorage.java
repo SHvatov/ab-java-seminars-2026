@@ -10,7 +10,10 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import academy.backend.market_pulse.model.Bond;
+import academy.backend.market_pulse.model.Etf;
 import academy.backend.market_pulse.model.Instrument;
+import academy.backend.market_pulse.model.Stock;
 
 /**
  * Файловое хранилище каталога инструментов: каждый инструмент — отдельный JSON-файл
@@ -34,6 +37,12 @@ public class InstrumentStorage {
                 .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withSetterVisibility(JsonAutoDetect.Visibility.NONE));
+        // Знание о JSON-сериализации домена вынесено в mixin'ы (Clean Architecture, семинар 9):
+        // домен свободен от аннотаций Jackson, привязка — снаружи, здесь.
+        mapper.addMixIn(Instrument.class, InstrumentJsonMixin.class);
+        mapper.addMixIn(Stock.class, StockJsonMixin.class);
+        mapper.addMixIn(Bond.class, BondJsonMixin.class);
+        mapper.addMixIn(Etf.class, EtfJsonMixin.class);
     }
 
     public void save(Instrument instrument) throws IOException {

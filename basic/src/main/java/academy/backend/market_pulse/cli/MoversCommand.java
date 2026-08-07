@@ -1,7 +1,6 @@
 package academy.backend.market_pulse.cli;
 
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import academy.backend.market_pulse.model.Quote;
@@ -30,9 +29,7 @@ public class MoversCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         Comparator<Quote> byChange = Comparator.comparing(Quote::getChangePercent);
-        watchlist.tickers().stream()
-                .map(quoteService::quoteFor)
-                .flatMap(Optional::stream)
+        quoteService.quotesFor(watchlist.tickers()).stream()
                 .sorted(losers ? byChange : byChange.reversed())
                 .limit(top)
                 .forEach(quote -> System.out.println(quote));

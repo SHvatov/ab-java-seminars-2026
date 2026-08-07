@@ -3,7 +3,6 @@ package academy.backend.market_pulse.cli;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -26,10 +25,7 @@ public class StatsCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        List<Quote> quotes = watchlist.tickers().stream()
-                .map(quoteService::quoteFor)
-                .flatMap(Optional::stream)
-                .toList();
+        List<Quote> quotes = quoteService.quotesFor(watchlist.tickers());
 
         if (quotes.isEmpty()) {
             System.out.println("Нет данных: watchlist пуст или котировки недоступны.");

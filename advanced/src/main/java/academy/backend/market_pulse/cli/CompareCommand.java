@@ -2,7 +2,6 @@ package academy.backend.market_pulse.cli;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import academy.backend.market_pulse.model.Quote;
@@ -24,9 +23,7 @@ public class CompareCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        tickers.stream()
-                .map(quoteService::quoteFor)          // String -> Optional<Quote>
-                .flatMap(Optional::stream)            // отбрасываем ненайденные
+        quoteService.quotesFor(tickers).stream()
                 .sorted(Comparator.comparing(Quote::getChangePercent).reversed())
                 .forEach(quote -> System.out.println(quote));
         return 0;
