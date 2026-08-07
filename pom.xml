@@ -38,6 +38,15 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.2</version>
+                    <configuration>
+                        <!--
+                          Java 25 (classfile 69) новее, чем официально поддерживает Byte Buddy,
+                          на котором работает inline-mock-maker Mockito. Экспериментальный режим
+                          Byte Buddy снимает проверку версии (рекомендация из текста самой ошибки).
+                          Убрать, когда Mockito/Byte Buddy официально начнут поддерживать Java 25.
+                        -->
+                        <argLine>-Dnet.bytebuddy.experimental=true</argLine>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
