@@ -7,9 +7,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +45,8 @@ public class HttpQuoteSource implements QuoteSource {
     private final InstrumentRepository repository;
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Map<String, String> figiCache = new HashMap<>();   // тикер -> figi
+    // ConcurrentHashMap: к источнику обращаются параллельные воркеры quotesFor (см. семинар 11).
+    private final Map<String, String> figiCache = new ConcurrentHashMap<>();   // тикер -> figi
 
     public HttpQuoteSource(String token, InstrumentRepository repository) {
         this.token = token;

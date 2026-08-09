@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
@@ -76,5 +77,34 @@ class QuoteServiceTest {
         // XXX выпал, порядок исходных тикеров сохранён. Замена flatMap(Optional::stream)
         // на map(Optional::get) уронила бы этот тест на "XXX".
         assertEquals(List.of(sber, lkoh), quotes);
+    }
+
+    @Test
+    void quotesForНеТеряетРезультатыПодКонкуренцией() {
+        QuoteSource source = mock(QuoteSource.class);
+        List<String> tickers = IntStream.range(0, 50).mapToObj(i -> "T" + i).toList();
+        for (String ticker : tickers) {
+            Stock stock = new Stock(ticker, ticker, Currency.RUB, "Sector", new BigDecimal("1"));
+            when(source.fetch(ticker)).thenReturn(
+                    Optional.of(new Quote(stock, new BigDecimal("100"), BigDecimal.ZERO)));
+        }
+        QuoteService service = new QuoteService(source);
+
+        List<Quote> quotes = service.quotesFor(tickers);
+
+        // Все 50 загружены: гонка на общем HashMap теряла бы записи, ConcurrentHashMap — нет.
+        assertEquals(50, quotes.size());
+    }
+
+    @Test
+    void кешДедуплицируетСетевыеВызовыМеждуВызовами() {
+        QuoteSource source = mock(QuoteSource.class);
+        when(source.fetch("SBER")).thenReturn(Optional.of(sberQuote()));
+        QuoteService service = new QuoteService(source);
+
+        service.quotesFor(List.of("SBER"));
+        service.quotesFor(List.of("SBER"));   // второй раз берётся из кеша
+
+        verify(source, times(1)).fetch("SBER");
     }
 }

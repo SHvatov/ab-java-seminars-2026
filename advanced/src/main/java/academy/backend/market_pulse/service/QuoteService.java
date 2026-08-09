@@ -3,12 +3,12 @@ package academy.backend.market_pulse.service;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntConsumer;
 
@@ -24,7 +24,9 @@ public class QuoteService {
 
     private final QuoteSource source;
     private final Queue<String> pending = new ArrayDeque<>();
-    private final Map<String, Quote> cache = new HashMap<>();
+    // ConcurrentHashMap, а не HashMap: параллельные воркеры quotesFor пишут в кеш одновременно
+    // (см. «План семинара.md», семинар 11, этап 2). HashMap под конкуренцией терял бы записи.
+    private final Map<String, Quote> cache = new ConcurrentHashMap<>();
 
     public QuoteService(QuoteSource source) {
         this.source = source;
@@ -68,11 +70,12 @@ public class QuoteService {
 
     /**
      * Параллельно загружает котировки по набору тикеров: по потоку на тикер (см. «План семинара.md»,
-     * семинар 10, этап 2). Каждый поток пишет результат в свою ячейку массива, поэтому общего
-     * изменяемого состояния нет и синхронизация не нужна; ненайденные пропускаются, порядок исходных
-     * тикеров сохраняется. По завершении каждого потока вызывается {@code onProgress} с числом уже
-     * загруженных котировок — для прогресс-бара в CLI. Счётчик атомарный, так как инкрементируется из
-     * нескольких потоков.
+     * семинар 10, этап 2). Каждый поток пишет результат в свою ячейку массива, а найденные котировки
+     * складываются в общий кеш через {@code computeIfAbsent} на {@link ConcurrentHashMap}: параллельные
+     * воркеры не теряют записи, а повторные тикеры не дублируют сетевой вызов (см. семинар 11, этап 2).
+     * Ненайденные пропускаются, порядок исходных тикеров сохраняется. По завершении каждого потока
+     * вызывается {@code onProgress} с числом уже загруженных котировок — для прогресс-бара в CLI.
+     * Счётчик атомарный, так как инкрементируется из нескольких потоков.
      */
     public List<Quote> quotesFor(Collection<String> tickers, IntConsumer onProgress) {
         List<String> list = List.copyOf(tickers);
@@ -83,7 +86,11 @@ public class QuoteService {
         for (int i = 0; i < list.size(); i++) {
             int index = i;
             threads[i] = Thread.ofPlatform().start(() -> {
-                source.fetch(list.get(index)).ifPresent(quote -> results[index] = quote);
+                String ticker = list.get(index);
+                Quote quote = cache.computeIfAbsent(ticker.toUpperCase(), key -> source.fetch(ticker).orElse(null));
+                if (quote != null) {
+                    results[index] = quote;
+                }
                 onProgress.accept(completed.incrementAndGet());
             });
         }
