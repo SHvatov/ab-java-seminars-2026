@@ -23,7 +23,10 @@ public class CompareCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        quoteService.quotesFor(tickers).stream()
+        ProgressBar progress = new ProgressBar(tickers.size());
+        List<Quote> quotes = quoteService.quotesFor(tickers, progress::update);
+        progress.done();
+        quotes.stream()
                 .sorted(Comparator.comparing(Quote::getChangePercent).reversed())
                 .forEach(quote -> System.out.println(quote));
         return 0;

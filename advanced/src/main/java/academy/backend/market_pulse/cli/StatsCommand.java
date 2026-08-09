@@ -25,7 +25,9 @@ public class StatsCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        List<Quote> quotes = quoteService.quotesFor(watchlist.tickers());
+        ProgressBar progress = new ProgressBar(watchlist.tickers().size());
+        List<Quote> quotes = quoteService.quotesFor(watchlist.tickers(), progress::update);
+        progress.done();
 
         if (quotes.isEmpty()) {
             System.out.println("Нет данных: watchlist пуст или котировки недоступны.");
