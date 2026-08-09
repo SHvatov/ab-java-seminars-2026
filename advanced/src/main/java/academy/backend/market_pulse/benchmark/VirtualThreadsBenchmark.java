@@ -9,12 +9,15 @@ import java.util.stream.IntStream;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
@@ -24,6 +27,10 @@ import org.openjdk.jmh.annotations.Warmup;
  * задач фиксированный пул упирается в свой размер (задачи ждут очереди), а виртуальные потоки
  * масштабируются по числу задач. На CPU-bound нагрузке разницы не было бы. Запуск — JMH-плагином
  * IntelliJ IDEA либо {@code org.openjdk.jmh.Main} из собранного jar.
+ *
+ * <p>Исполнители создаются один раз в {@link #setup()} и переиспользуются: создание восьми
+ * платформенных потоков не должно попадать в измеряемый метод — иначе {@code fixedPool} нёс бы
+ * стоимость старта потоков, которой нет у виртуальных, и сравнение было бы нечестным.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -37,6 +44,21 @@ public class VirtualThreadsBenchmark {
     @Param({"100", "1000"})
     private int tasks;
 
+    private ExecutorService fixedPoolExecutor;
+    private ExecutorService virtualExecutor;
+
+    @Setup(Level.Trial)
+    public void setup() {
+        fixedPoolExecutor = Executors.newFixedThreadPool(8);   // 8 платформенных потоков — задачи ждут очереди
+        virtualExecutor = Executors.newVirtualThreadPerTaskExecutor();   // виртуальный поток на задачу
+    }
+
+    @TearDown(Level.Trial)
+    public void tearDown() {
+        fixedPoolExecutor.close();
+        virtualExecutor.close();
+    }
+
     /** Имитация блокирующего сетевого ожидания. */
     private static void blockingIo() {
         try {
@@ -47,22 +69,20 @@ public class VirtualThreadsBenchmark {
     }
 
     private long run(ExecutorService executor) {
-        try (executor) {
-            CompletableFuture<?>[] futures = IntStream.range(0, tasks)
-                    .mapToObj(i -> CompletableFuture.runAsync(VirtualThreadsBenchmark::blockingIo, executor))
-                    .toArray(CompletableFuture[]::new);
-            CompletableFuture.allOf(futures).join();
-        }
+        CompletableFuture<?>[] futures = IntStream.range(0, tasks)
+                .mapToObj(i -> CompletableFuture.runAsync(VirtualThreadsBenchmark::blockingIo, executor))
+                .toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futures).join();
         return tasks;
     }
 
     @Benchmark
     public long fixedPool() {
-        return run(Executors.newFixedThreadPool(8));   // 8 платформенных потоков — задачи ждут очереди
+        return run(fixedPoolExecutor);
     }
 
     @Benchmark
     public long virtualThreads() {
-        return run(Executors.newVirtualThreadPerTaskExecutor());   // виртуальный поток на задачу
+        return run(virtualExecutor);
     }
 }

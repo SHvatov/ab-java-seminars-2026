@@ -112,7 +112,7 @@ void example(ExecutorService executor, String ticker) {
 
 Так как задачи отделены от исполнителя, переход — замена фабрики:
 
-```java
+```text
 Executors.newFixedThreadPool(8)              // было: платформенные потоки, задачи в очереди
 Executors.newVirtualThreadPerTaskExecutor()  // стало: виртуальный поток на задачу
 ```

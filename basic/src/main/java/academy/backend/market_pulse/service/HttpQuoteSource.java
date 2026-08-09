@@ -46,6 +46,8 @@ public class HttpQuoteSource implements QuoteSource {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     // ConcurrentHashMap: к источнику обращаются параллельные воркеры quotesFor (см. семинар 11).
+    // Доступ ниже — get/put, а не computeIfAbsent: резолв идемпотентен (тот же тикер -> тот же figi),
+    // а сетевой lookup бросает проверяемые исключения, которые неудобно оборачивать в лямбду.
     private final Map<String, String> figiCache = new ConcurrentHashMap<>();   // тикер -> figi
 
     public HttpQuoteSource(String token, InstrumentRepository repository) {

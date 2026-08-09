@@ -8,9 +8,11 @@
 результата по готовности и строит из этого конвейеры, не блокируясь.
 
 ```java
-CompletableFuture.supplyAsync(() -> load(ticker), executor)
-        .thenApply(this::enrich)
-        .exceptionally(ex -> Optional.empty());
+void pipeline(String ticker, ExecutorService executor) {
+    CompletableFuture.supplyAsync(() -> load(ticker), executor)
+            .thenApply(this::enrich)
+            .exceptionally(ex -> Optional.empty());
+}
 ```
 
 ---
@@ -44,8 +46,10 @@ CompletableFuture.supplyAsync(() -> load(ticker), executor)
 `allOf(...)` завершается, когда завершены все; порядок результатов сохраняется порядком в списке futures:
 
 ```java
-CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
-List<Quote> quotes = futures.stream().map(CompletableFuture::join).flatMap(Optional::stream).toList();
+void awaitAll(List<CompletableFuture<Optional<Quote>>> futures) {
+    CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
+    List<Quote> quotes = futures.stream().map(CompletableFuture::join).flatMap(Optional::stream).toList();
+}
 ```
 
 В проекте `quotesFor` переводится на `supplyAsync` + `allOf` с `exceptionally`: сбой одного тикера — пропуск, а не падение

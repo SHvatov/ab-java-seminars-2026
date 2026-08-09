@@ -81,19 +81,30 @@ class QuoteServiceTest {
 
     @Test
     void quotesForНеТеряетРезультатыПодКонкуренцией() {
-        QuoteSource source = mock(QuoteSource.class);
-        List<String> tickers = IntStream.range(0, 50).mapToObj(i -> "T" + i).toList();
-        for (String ticker : tickers) {
+        int n = 1000;
+        List<String> tickers = IntStream.range(0, n).mapToObj(i -> "T" + i).toList();
+        // Ручной источник (не Mockito-мок: Mockito сериализует вызовы) с короткой задержкой: воркеры
+        // массово перекрываются во времени и одновременно пишут в общий кеш. На HashMap такая гонка
+        // теряет записи или рушит структуру; ConcurrentHashMap выдерживает.
+        QuoteSource source = ticker -> {
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             Stock stock = new Stock(ticker, ticker, Currency.RUB, "Sector", new BigDecimal("1"));
-            when(source.fetch(ticker)).thenReturn(
-                    Optional.of(new Quote(stock, new BigDecimal("100"), BigDecimal.ZERO)));
-        }
+            return Optional.of(new Quote(stock, new BigDecimal("100"), BigDecimal.ZERO));
+        };
         QuoteService service = new QuoteService(source);
 
         List<Quote> quotes = service.quotesFor(tickers);
 
-        // Все 50 загружены: гонка на общем HashMap теряла бы записи, ConcurrentHashMap — нет.
-        assertEquals(50, quotes.size());
+        assertEquals(n, quotes.size());
+        // Главная проверка — сам общий кеш, а не список результатов из CompletableFuture: на HashMap
+        // часть записей терялась бы под гонкой, и cached(...) вернул бы empty. ConcurrentHashMap — нет.
+        for (String ticker : tickers) {
+            assertTrue(service.cached(ticker).isPresent(), "потеряно в кеше: " + ticker);
+        }
     }
 
     @Test
