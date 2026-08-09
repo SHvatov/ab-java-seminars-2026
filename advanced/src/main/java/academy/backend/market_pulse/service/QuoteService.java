@@ -1,14 +1,15 @@
 package academy.backend.market_pulse.service;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntConsumer;
 
@@ -24,8 +25,8 @@ public class QuoteService {
 
     private final QuoteSource source;
     private final Queue<String> pending = new ArrayDeque<>();
-    // ConcurrentHashMap, а не HashMap: параллельные воркеры quotesFor пишут в кеш одновременно
-    // (см. «План семинара.md», семинар 11, этап 2). HashMap под конкуренцией терял бы записи.
+    // ConcurrentHashMap, а не HashMap: в кеш пишут параллельные воркеры quotesFor
+    // (см. «План семинара.md», семинар 11).
     private final Map<String, Quote> cache = new ConcurrentHashMap<>();
 
     public QuoteService(QuoteSource source) {
@@ -69,42 +70,35 @@ public class QuoteService {
     }
 
     /**
-     * Параллельно загружает котировки по набору тикеров: по потоку на тикер (см. «План семинара.md»,
-     * семинар 10, этап 2). Каждый поток пишет результат в свою ячейку массива, а найденные котировки
-     * складываются в общий кеш через {@code computeIfAbsent} на {@link ConcurrentHashMap}: параллельные
-     * воркеры не теряют записи, а повторные тикеры не дублируют сетевой вызов (см. семинар 11, этап 2).
-     * Ненайденные пропускаются, порядок исходных тикеров сохраняется. По завершении каждого потока
-     * вызывается {@code onProgress} с числом уже загруженных котировок — для прогресс-бара в CLI.
-     * Счётчик атомарный, так как инкрементируется из нескольких потоков.
+     * Параллельно загружает котировки по набору тикеров через {@link ExecutorService} на виртуальных
+     * потоках (см. «План семинара.md», семинар 12): по одной задаче на тикер, каждая — отдельный
+     * {@link CompletableFuture}. Ручное управление потоками (семинар 10) заменено пулом, задачи
+     * отделены от исполнителя. Порядок результатов сохраняется порядком в списке futures, ненайденные
+     * пропускаются. Котировки кешируются в общий {@link ConcurrentHashMap} через атомарный
+     * {@code computeIfAbsent} (семинар 11); счётчик прогресса атомарный.
      */
     public List<Quote> quotesFor(Collection<String> tickers, IntConsumer onProgress) {
         List<String> list = List.copyOf(tickers);
-        Quote[] results = new Quote[list.size()];
-        Thread[] threads = new Thread[list.size()];
         AtomicInteger completed = new AtomicInteger();
 
-        for (int i = 0; i < list.size(); i++) {
-            int index = i;
-            threads[i] = Thread.ofPlatform().start(() -> {
-                String ticker = list.get(index);
-                Quote quote = cache.computeIfAbsent(ticker.toUpperCase(), key -> source.fetch(ticker).orElse(null));
-                if (quote != null) {
-                    results[index] = quote;
-                }
-                onProgress.accept(completed.incrementAndGet());
-            });
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<CompletableFuture<Optional<Quote>>> futures = list.stream()
+                    .map(ticker -> CompletableFuture.supplyAsync(() -> {
+                        Optional<Quote> quote = cachedFetch(ticker);
+                        onProgress.accept(completed.incrementAndGet());
+                        return quote;
+                    }, executor))
+                    .toList();
+
+            return futures.stream()
+                    .map(CompletableFuture::join)
+                    .flatMap(Optional::stream)
+                    .toList();
         }
-        for (Thread thread : threads) {
-            joinQuietly(thread);
-        }
-        return Arrays.stream(results).filter(Objects::nonNull).toList();
     }
 
-    private void joinQuietly(Thread thread) {
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();   // восстанавливаем флаг прерывания
-        }
+    private Optional<Quote> cachedFetch(String ticker) {
+        return Optional.ofNullable(
+                cache.computeIfAbsent(ticker.toUpperCase(), key -> source.fetch(ticker).orElse(null)));
     }
 }
