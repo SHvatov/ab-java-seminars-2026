@@ -20,5 +20,17 @@
             <artifactId>jol-core</artifactId>
             <version>0.17</version>
         </dependency>
+        <!-- Разбор аргументов командной строки (семинар 2, этап 2) -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.7.7</version>
+        </dependency>
+        <!-- Генерация прокси-подклассов во время выполнения (семинар 2, этап 5 — Proxy) -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 </project>
