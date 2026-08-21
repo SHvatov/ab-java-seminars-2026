@@ -2,6 +2,7 @@ package academy.backend.market_pulse.repository;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import academy.backend.market_pulse.model.Instrument;
 
@@ -20,13 +21,13 @@ public class InstrumentRepository implements Iterable<Instrument> {
         instruments[size++] = instrument;
     }
 
-    public Instrument findByTicker(String ticker) {
+    public Optional<Instrument> findByTicker(String ticker) {
         for (Instrument instrument : this) {
             if (instrument.getTicker().equalsIgnoreCase(ticker)) {
-                return instrument;
+                return Optional.of(instrument);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

@@ -1,10 +1,8 @@
 package academy.backend.market_pulse.factory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
+import academy.backend.market_pulse.util.Registry;
 
 /**
  * Реестр фабрик инструментов. Каждая фабрика регистрирует себя сама при загрузке своего класса —
@@ -12,7 +10,7 @@ import academy.backend.market_pulse.model.Instrument;
  */
 public final class InstrumentFactories {
 
-    private static final Map<String, InstrumentFactory> REGISTRY = new HashMap<>();
+    private static final Registry<String, InstrumentFactory> REGISTRY = new Registry<>();
 
     static {
         // Статический блок фабрики выполняется только при загрузке её класса — форсируем загрузку,
@@ -26,15 +24,13 @@ public final class InstrumentFactories {
     }
 
     public static void register(String type, InstrumentFactory factory) {
-        REGISTRY.put(type.toUpperCase(), factory);
+        REGISTRY.register(type.toUpperCase(), factory);
     }
 
     public static Instrument create(String type, String ticker, String name, Currency currency) {
-        InstrumentFactory factory = REGISTRY.get(type.toUpperCase());
-        if (factory == null) {
-            throw new IllegalArgumentException("Unknown instrument type: " + type);
-        }
-        return factory.create(ticker, name, currency);
+        return REGISTRY.get(type.toUpperCase())
+                .map(factory -> factory.create(ticker, name, currency))
+                .orElseThrow(() -> new IllegalArgumentException("Unknown instrument type: " + type));
     }
 
     private static void loadClass(Class<?> factoryClass) {
