@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import academy.backend.market_pulse.exception.DuplicateTickerException;
 import academy.backend.market_pulse.model.Instrument;
 
 /**
@@ -17,6 +18,9 @@ public class InMemoryInstrumentRepository implements InstrumentRepository {
 
     @Override
     public void add(Instrument instrument) {
+        if (findByTicker(instrument.getTicker()).isPresent()) {
+            throw new DuplicateTickerException(instrument.getTicker());
+        }
         instruments[size++] = instrument;
     }
 

@@ -38,5 +38,17 @@
             <artifactId>vavr</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <!-- Микробенчмарки: стоимость исключений (семинар 4, этап 5) -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
