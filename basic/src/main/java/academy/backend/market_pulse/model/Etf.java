@@ -16,8 +16,6 @@ public class Etf extends Instrument {
         return trackingIndex;
     }
 
-    @Override
-    public String getDescription() {
-        return "ETF, отслеживает индекс: " + trackingIndex;
-    }
+    // TODO (шаг 4.2): добавить описание инструмента (отслеживаемый индекс),
+    // когда в Instrument появится соответствующий метод.
 }

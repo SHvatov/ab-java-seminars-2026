@@ -12,6 +12,8 @@ public abstract class Instrument {
     private final Currency currency;
 
     public Instrument(String ticker, String name, Currency currency) {
+        // NOTICE: тикер — инвариант объекта; без проверки здесь инструмент
+        // можно было бы создать в некорректном состоянии.
         if (ticker == null || ticker.isBlank()) {
             throw new IllegalArgumentException("Ticker cannot be blank");
         }
@@ -32,10 +34,13 @@ public abstract class Instrument {
         return currency;
     }
 
-    public abstract String getDescription();
+    // TODO (шаг 4.2): каждому инструменту нужно уметь описать себя текстом,
+    // специфично для типа (акция — сектор, облигация — купон и погашение,
+    // ETF — индекс). Обсудить на семинаре, как это сделать без instanceof-цепочек,
+    // и дополнить toString() ниже вызовом нового метода.
 
     @Override
     public String toString() {
-        return ticker + " — " + name + " (" + getDescription() + ")";
+        return ticker + " — " + name;
     }
 }

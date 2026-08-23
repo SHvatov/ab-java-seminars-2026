@@ -1,17 +1,14 @@
 package academy.backend.market_pulse.model;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /**
- * Акция. В отличие от {@link Bond} и {@link Etf}, только у акций есть
- * дивидендная доходность — поэтому {@code getDividends} объявлен здесь,
- * а не в {@link Instrument} (см. «План семинара.md», этап 4.4 — нарушение LSP).
+ * Акция.
  */
 public class Stock extends Instrument {
 
     private final String sector;
-    // dividendYield — процент годовой дивидендной доходности, например 6.5
+    // NOTICE: доходность и цена — всегда BigDecimal, не double (деньги; см. шаг 4.3 плана).
     private final BigDecimal dividendYield;
 
     public Stock(String ticker, String name, Currency currency,
@@ -25,16 +22,10 @@ public class Stock extends Instrument {
         return sector;
     }
 
-    /**
-     * Годовая дивидендная доходность в валюте инструмента: цена × доходность / 100.
-     */
-    public BigDecimal getDividends(BigDecimal currentPrice) {
-        return currentPrice.multiply(dividendYield)
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-    }
+    // TODO (шаг 4.2): добавить описание инструмента (сектор), когда в Instrument
+    // появится соответствующий метод.
 
-    @Override
-    public String getDescription() {
-        return "Акция, сектор: " + sector;
-    }
+    // TODO (шаг 4.4): реализовать расчёт годовой дивидендной доходности —
+    // currentPrice * dividendYield / 100, с явным RoundingMode. Обсудить на
+    // семинаре, почему этот метод должен остаться только здесь, а не в Instrument.
 }
