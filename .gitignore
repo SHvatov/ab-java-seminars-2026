@@ -10,3 +10,6 @@ target/
 
 # OS
 .DS_Store
+
+# Claude Code tooling config — not part of the seminar material
+.claude/
