@@ -24,7 +24,7 @@ public class Main {
         Stock sber = new Stock("SBER", "Сбербанк", Currency.RUB,
                 "Financials", new BigDecimal("6.5"));
         Bond ofz = new Bond("SU26238RMFS4", "ОФЗ-26238", Currency.RUB,
-                7.1, 2035);
+                new BigDecimal("7.1"), 2035);
         Etf tmos = new Etf("TMOS", "Тинькофф iMOEX", Currency.RUB, "MOEX");
 
         // Полиморфизм подтипов: getDescription() вызывается разный для каждого
