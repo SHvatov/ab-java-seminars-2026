@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Рыночная котировка: инструмент + цена + изменение за период. Использует
  * агрегацию, а не наследование от {@link Stock} (см. «План семинара.md»,
- * этап 4.7, шаги 1-2 — эволюция StockSnapshot → Quote).
+ * шаг 4.5 — эволюция StockSnapshot → Quote).
  */
 public class Quote {
 

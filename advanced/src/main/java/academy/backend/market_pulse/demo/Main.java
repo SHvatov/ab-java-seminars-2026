@@ -8,6 +8,7 @@ import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Etf;
 import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.model.Portfolio;
+import academy.backend.market_pulse.model.PortfolioImpl;
 import academy.backend.market_pulse.model.Quote;
 import academy.backend.market_pulse.model.Stock;
 
@@ -24,7 +25,7 @@ public class Main {
         Stock sber = new Stock("SBER", "Сбербанк", Currency.RUB,
                 "Financials", new BigDecimal("6.5"));
         Bond ofz = new Bond("SU26238RMFS4", "ОФЗ-26238", Currency.RUB,
-                7.1, 2035);
+                new BigDecimal("7.1"), 2035);
         Etf tmos = new Etf("TMOS", "Тинькофф iMOEX", Currency.RUB, "MOEX");
 
         // Полиморфизм подтипов: getDescription() вызывается разный для каждого
@@ -47,7 +48,7 @@ public class Main {
         System.out.println("Дивиденды по котировке: " + ofzQuote.getDividends());
 
         // Portfolio — композиция: Position создаётся и живёт только внутри портфеля.
-        Portfolio portfolio = new Portfolio("Пенсия Серёжи");
+        Portfolio portfolio = new PortfolioImpl("Пенсия Серёжи");
         portfolio.addPosition(sber, 10);
         portfolio.addPosition(ofz, 5);
         portfolio.addPosition(tmos, 3);

@@ -371,5 +371,16 @@ garbage collection). Настоящий раздел даёт лишь обще�
 ### Инструменты
 
 - [JOL (Java Object Layout)](https://openjdk.org/projects/code-tools/jol/) — официальная страница проекта.
+- [JOL: примеры использования (GitHub)](https://github.com/openjdk/jol/tree/master/jol-samples/src/main/java/org/openjdk/jol/samples) —
+  готовые примеры на `ClassLayout` и `GraphLayout` помимо тех, что разобраны в материале.
 - [VisualVM](https://visualvm.github.io/) — официальная страница инструмента.
+- [VisualVM: мониторинг Heap (документация)](https://visualvm.github.io/documentation.html) — раздел про вкладку
+  Monitor и снятие Heap Dump.
+
+### Заголовок объекта и Compressed Oops
+
+- [Compressed Oops в HotSpot JVM](https://wiki.openjdk.org/display/HotSpot/CompressedOops) — как именно 8-байтовая
+  ссылка сжимается до 4 байт и при каких условиях это работает.
+- [Java Objects Inside Out](https://shipilev.net/jvm/objects-inside-out/) — подробный разбор внутреннего устройства
+  объекта от автора JOL (Александр Шипилёв).
 
