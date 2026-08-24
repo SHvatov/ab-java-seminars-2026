@@ -2,9 +2,6 @@ package academy.backend.market_pulse.model;
 
 import java.math.BigDecimal;
 
-/**
- * Облигация.
- */
 public class Bond extends Instrument {
 
     private final BigDecimal couponRate;
@@ -25,6 +22,9 @@ public class Bond extends Instrument {
         return maturityYear;
     }
 
-    // TODO (шаг 4.2): добавить описание инструмента (купон + год погашения),
-    // когда в Instrument появится соответствующий метод.
+    @Override
+    public String getDescription() {
+        // TODO: описание облигации — купон и год погашения.
+        throw new UnsupportedOperationException("getDescription для Bond");
+    }
 }
