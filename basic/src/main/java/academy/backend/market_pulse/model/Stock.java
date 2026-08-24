@@ -2,13 +2,10 @@ package academy.backend.market_pulse.model;
 
 import java.math.BigDecimal;
 
-/**
- * Акция.
- */
 public class Stock extends Instrument {
 
     private final String sector;
-    // NOTICE: доходность и цена — всегда BigDecimal, не double (деньги; см. шаг 4.3 плана).
+    // NOTICE: доходность и цена — всегда BigDecimal, не double (деньги).
     private final BigDecimal dividendYield;
 
     public Stock(String ticker, String name, Currency currency,
@@ -22,10 +19,14 @@ public class Stock extends Instrument {
         return sector;
     }
 
-    // TODO (шаг 4.2): добавить описание инструмента (сектор), когда в Instrument
-    // появится соответствующий метод.
+    @Override
+    public String getDescription() {
+        // TODO: описание акции — сектор.
+        throw new UnsupportedOperationException("getDescription для Stock");
+    }
 
-    // TODO (шаг 4.4): реализовать расчёт годовой дивидендной доходности —
-    // currentPrice * dividendYield / 100, с явным RoundingMode. Обсудить на
-    // семинаре, почему этот метод должен остаться только здесь, а не в Instrument.
+    public BigDecimal getDividends(BigDecimal currentPrice) {
+        // TODO: currentPrice * dividendYield / 100, с явным RoundingMode.
+        throw new UnsupportedOperationException("getDividends для Stock");
+    }
 }

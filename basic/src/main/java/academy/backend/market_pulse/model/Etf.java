@@ -1,8 +1,5 @@
 package academy.backend.market_pulse.model;
 
-/**
- * Биржевой фонд (ETF).
- */
 public class Etf extends Instrument {
 
     private final String trackingIndex;
@@ -16,6 +13,9 @@ public class Etf extends Instrument {
         return trackingIndex;
     }
 
-    // TODO (шаг 4.2): добавить описание инструмента (отслеживаемый индекс),
-    // когда в Instrument появится соответствующий метод.
+    @Override
+    public String getDescription() {
+        // TODO: описание ETF — отслеживаемый индекс.
+        throw new UnsupportedOperationException("getDescription для Etf");
+    }
 }

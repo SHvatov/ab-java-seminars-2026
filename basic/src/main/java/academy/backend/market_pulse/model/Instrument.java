@@ -34,13 +34,10 @@ public abstract class Instrument {
         return currency;
     }
 
-    // TODO (шаг 4.2): каждому инструменту нужно уметь описать себя текстом,
-    // специфично для типа (акция — сектор, облигация — купон и погашение,
-    // ETF — индекс). Обсудить на семинаре, как это сделать без instanceof-цепочек,
-    // и дополнить toString() ниже вызовом нового метода.
+    public abstract String getDescription();
 
     @Override
     public String toString() {
-        return ticker + " — " + name;
+        return ticker + " — " + name + " (" + getDescription() + ")";
     }
 }
