@@ -7,6 +7,9 @@ import academy.backend.market_pulse.model.Bond;
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Etf;
 import academy.backend.market_pulse.model.Instrument;
+import academy.backend.market_pulse.model.Portfolio;
+import academy.backend.market_pulse.model.PortfolioImpl;
+import academy.backend.market_pulse.model.Quote;
 import academy.backend.market_pulse.model.Stock;
 
 public class Main {
@@ -18,16 +21,35 @@ public class Main {
                 new BigDecimal("7.1"), 2035);
         Etf tmos = new Etf("TMOS", "Тинькофф iMOEX", Currency.RUB, "MOEX");
 
-        // NOTICE: toString() каждого инструмента вызывает getDescription() —
-        // до реализации метода в Stock/Bond/Etf этот вызов бросает исключение.
+        // Полиморфизм подтипов: getDescription() вызывается разный для каждого
+        // конкретного типа, хотя обращаемся мы к ним через общий тип Instrument.
         List<Instrument> instruments = List.of(sber, ofz, tmos);
         for (Instrument instrument : instruments) {
             System.out.println(instrument);
         }
 
-        // TODO: построить Quote для sber и ofz, вывести котировки и дивиденды по ним.
+        // Quote — агрегация: одна и та же акция может быть частью любого числа
+        // котировок. getDividends() здесь корректен, т.к. цена уже известна.
+        Quote sberQuote = new Quote(sber, new BigDecimal("278.50"), new BigDecimal("1.2"));
+        System.out.println(sberQuote);
+        System.out.println("Дивиденды по котировке: " + sberQuote.getDividends());
 
-        // TODO: построить Portfolio, добавить позиции (sber x10, ofz x5, tmos x3)
-        // и вывести список позиций.
+        // Bond и Etf дивидендов не платят — Quote.getDividends() честно
+        // возвращает ZERO, не нарушая LSP (метод не объявлен в Instrument).
+        Quote ofzQuote = new Quote(ofz, new BigDecimal("980.00"), new BigDecimal("-0.3"));
+        System.out.println(ofzQuote);
+        System.out.println("Дивиденды по котировке: " + ofzQuote.getDividends());
+
+        // Portfolio — композиция: Position создаётся и живёт только внутри портфеля.
+        Portfolio portfolio = new PortfolioImpl("Пенсия Серёжи");
+        portfolio.addPosition(sber, 10);
+        portfolio.addPosition(ofz, 5);
+        portfolio.addPosition(tmos, 3);
+
+        System.out.println("Портфель: " + portfolio.getName());
+        for (Portfolio.Position position : portfolio.getPositions()) {
+            System.out.println("  " + position.getInstrument().getTicker()
+                    + " x " + position.getQuantity());
+        }
     }
 }
