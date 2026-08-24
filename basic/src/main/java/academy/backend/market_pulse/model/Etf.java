@@ -15,7 +15,6 @@ public class Etf extends Instrument {
 
     @Override
     public String getDescription() {
-        // TODO: описание ETF — отслеживаемый индекс.
-        throw new UnsupportedOperationException("getDescription для Etf");
+        return "ETF, отслеживает индекс: " + trackingIndex;
     }
 }
