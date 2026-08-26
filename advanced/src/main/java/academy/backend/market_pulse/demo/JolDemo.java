@@ -8,7 +8,7 @@ import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Stock;
 
 /**
- * Демонстрация для Этапа 6 семинара 1 (JOL): точные размеры объектов и
+ * Демонстрация для практики с JOL (семинар 1): точные размеры объектов и
  * сравнение shallow size двух двумерных массивов разной формы.
  * <p>
  * TODO: заменить на полноценный CLI (см. следующие семинары) — этот класс
