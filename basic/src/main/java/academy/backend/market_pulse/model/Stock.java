@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 /**
  * Акция. В отличие от {@link Bond} и {@link Etf}, только у акций есть
  * дивидендная доходность — поэтому {@code getDividends} объявлен здесь,
- * а не в {@link Instrument} (см. «План семинара.md», семинар 2 — нарушение LSP).
+ * а не в {@link Instrument}, и реализует {@link DividendPaying}.
  */
 public class Stock extends Instrument implements DividendPaying {
 
