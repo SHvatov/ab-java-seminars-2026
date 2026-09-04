@@ -1,50 +1,30 @@
 package academy.backend.market_pulse.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Портфель пользователя. Владеет своими позициями композиционно: {@link Position}
- * не имеет смысла в отрыве от портфеля и не может быть создан снаружи
- * (см. «План семинара.md», этап 4.7, шаг 3 — агрегация vs композиция).
+ * Портфель пользователя.
+ * <p>
+ * Функциональные требования:
+ * <ul>
+ *     <li>у портфеля есть название;</li>
+ *     <li>можно добавить позицию — инструмент и его количество;</li>
+ *     <li>можно получить все позиции портфеля.</li>
+ * </ul>
+ * Нефункциональные требования:
+ * <ul>
+ *     <li>коллекции (List, ArrayList) ещё не пройдены — позиции отдаются массивом.</li>
+ * </ul>
  */
-public class Portfolio {
+public interface Portfolio {
 
-    public static class Position {
-        private final Instrument instrument;
-        private final int quantity;
+    String getName();
 
-        private Position(Instrument instrument, int quantity) {
-            this.instrument = instrument;
-            this.quantity = quantity;
-        }
+    void addPosition(Instrument instrument, int quantity);
 
-        public Instrument getInstrument() {
-            return instrument;
-        }
+    Position[] getPositions();
 
-        public int getQuantity() {
-            return quantity;
-        }
-    }
+    interface Position {
+        Instrument getInstrument();
 
-    private final String name;
-    private final List<Position> positions = new ArrayList<>();
-
-    public Portfolio(String name) {
-        this.name = name;
-    }
-
-    public void addPosition(Instrument instrument, int quantity) {
-        positions.add(new Position(instrument, quantity));
-    }
-
-    public List<Position> getPositions() {
-        return Collections.unmodifiableList(positions);
-    }
-
-    public String getName() {
-        return name;
+        int getQuantity();
     }
 }

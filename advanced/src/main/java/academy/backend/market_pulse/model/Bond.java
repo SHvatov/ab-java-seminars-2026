@@ -1,21 +1,20 @@
 package academy.backend.market_pulse.model;
 
-/**
- * Облигация.
- */
+import java.math.BigDecimal;
+
 public class Bond extends Instrument {
 
-    private final double couponRate;
+    private final BigDecimal couponRate;
     private final int maturityYear;
 
     public Bond(String ticker, String name, Currency currency,
-                double couponRate, int maturityYear) {
+                BigDecimal couponRate, int maturityYear) {
         super(ticker, name, currency);
         this.couponRate = couponRate;
         this.maturityYear = maturityYear;
     }
 
-    public double getCouponRate() {
+    public BigDecimal getCouponRate() {
         return couponRate;
     }
 
