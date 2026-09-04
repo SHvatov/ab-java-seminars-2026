@@ -11,7 +11,6 @@ import java.math.RoundingMode;
 public class Stock extends Instrument implements DividendPaying {
 
     private final String sector;
-    // NOTICE: доходность и цена — всегда BigDecimal, не double (деньги).
     private final BigDecimal dividendYield;
 
     public Stock(String ticker, String name, Currency currency,

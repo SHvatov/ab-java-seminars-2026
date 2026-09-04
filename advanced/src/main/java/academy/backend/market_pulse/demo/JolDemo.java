@@ -3,16 +3,14 @@ package academy.backend.market_pulse.demo;
 import java.math.BigDecimal;
 
 import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.info.GraphLayout;
 
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Stock;
 
 /**
  * Демонстрация для практики с JOL (семинар 1): точные размеры объектов и
- * сравнение shallow size двух двумерных массивов разной формы.
- * <p>
- * TODO: заменить на полноценный CLI (см. следующие семинары) — этот класс
- * не предназначен для использования как конечный пользовательский интерфейс.
+ * сравнение shallow/deep size двух двумерных массивов разной формы.
  */
 public class JolDemo {
 
@@ -34,10 +32,8 @@ public class JolDemo {
         System.out.println("int[1000][10] shallow size:  "
                 + ClassLayout.parseInstance(large).instanceSize());
 
-        // GraphLayout покажет полный граф — попробуйте сами!
-        // TODO: студентам предлагается самостоятельно раскомментировать и
-        // сравнить deep size обоих массивов через GraphLayout.parseInstance(...).toFootprint()
-        // System.out.println(GraphLayout.parseInstance(small).toFootprint());
-        // System.out.println(GraphLayout.parseInstance(large).toFootprint());
+        // GraphLayout — полный граф ссылок, deep size с учётом внутренних массивов
+        System.out.println(GraphLayout.parseInstance(small).toFootprint());
+        System.out.println(GraphLayout.parseInstance(large).toFootprint());
     }
 }
