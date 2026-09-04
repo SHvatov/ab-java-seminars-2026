@@ -2,31 +2,23 @@ package academy.backend.market_pulse.factory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
 
 /**
- * Реестр фабрик инструментов. Каждая фабрика регистрирует себя сама при загрузке своего класса —
- * по аналогии с {@code DriverManager} в JDBC.
+ * Реестр фабрик инструментов. Реализации {@link InstrumentFactory} не регистрируют себя вручную —
+ * они обнаруживаются через {@link ServiceLoader} по записи в
+ * {@code META-INF/services/academy.backend.market_pulse.factory.InstrumentFactory}. Добавление
+ * нового типа инструмента не требует правки этого класса — только новая реализация и строка в
+ * файле сервиса.
  */
 public final class InstrumentFactories {
 
-    private static final Map<String, InstrumentFactory> REGISTRY = new HashMap<>();
-
-    static {
-        // Статический блок фабрики выполняется только при загрузке её класса — форсируем загрузку,
-        // иначе реестр останется пустым (тот же нюанс, что и с DriverManager до JDBC 4.0).
-        loadClass(StockFactory.class);
-        loadClass(BondFactory.class);
-        loadClass(EtfFactory.class);
-    }
+    private static final Map<String, InstrumentFactory> REGISTRY = load();
 
     private InstrumentFactories() {
-    }
-
-    public static void register(String type, InstrumentFactory factory) {
-        REGISTRY.put(type.toUpperCase(), factory);
     }
 
     public static Instrument create(String type, String ticker, String name, Currency currency) {
@@ -37,11 +29,11 @@ public final class InstrumentFactories {
         return factory.create(ticker, name, currency);
     }
 
-    private static void loadClass(Class<?> factoryClass) {
-        try {
-            Class.forName(factoryClass.getName());
-        } catch (ClassNotFoundException e) {
-            throw new ExceptionInInitializerError(e);
+    private static Map<String, InstrumentFactory> load() {
+        Map<String, InstrumentFactory> registry = new HashMap<>();
+        for (InstrumentFactory factory : ServiceLoader.load(InstrumentFactory.class)) {
+            registry.put(factory.type().toUpperCase(), factory);
         }
+        return registry;
     }
 }

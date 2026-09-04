@@ -18,7 +18,7 @@
     </properties>
 
     <dependencies>
-        <!-- Java Object Layout: точные размеры и раскладка объектов в памяти (семинар 1, этап 6) -->
+        <!-- Java Object Layout: точные размеры и раскладка объектов в памяти -->
         <dependency>
             <groupId>org.openjdk.jol</groupId>
             <artifactId>jol-core</artifactId>
@@ -31,13 +31,13 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Разбор аргументов командной строки (семинар 2, этап 2) -->
+        <!-- Разбор аргументов командной строки -->
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>4.7.7</version>
         </dependency>
-        <!-- Генерация прокси-подклассов во время выполнения (семинар 2, этап 5 — Proxy) -->
+        <!-- Генерация прокси-подклассов во время выполнения -->
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>

@@ -3,7 +3,7 @@ package academy.backend.market_pulse.filter;
 import academy.backend.market_pulse.model.Instrument;
 
 /**
- * Правило отбора инструментов (см. «План семинара.md», семинар 2, этап 4 — Strategy).
+ * Правило отбора инструментов.
  */
 public interface InstrumentFilter {
 

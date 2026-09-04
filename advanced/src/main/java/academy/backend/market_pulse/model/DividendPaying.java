@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 
 /**
  * Способность инструмента приносить дивиденды. Вынесена из {@link Instrument} в отдельный
- * интерфейс, реализуемый только {@link Stock} — {@link Bond} и {@link Etf} дивидендов не платят
- * (см. «План семинара.md», семинар 2, этап 1 — исправление нарушения LSP).
+ * интерфейс, реализуемый только {@link Stock} — {@link Bond} и {@link Etf} дивидендов не платят.
  */
 public interface DividendPaying {
 
