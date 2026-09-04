@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 /**
  * Рыночная котировка: инструмент + цена + изменение за период. Использует
- * агрегацию, а не наследование от {@link Stock} (см. «План семинара.md»,
- * этап 4.7, шаги 1-2 — эволюция StockSnapshot → Quote).
+ * агрегацию, а не наследование от {@link Stock} (см. «План семинара.md» —
+ * эволюция StockSnapshot → Quote).
  */
 public class Quote {
 
@@ -40,7 +40,11 @@ public class Quote {
 
     @Override
     public String toString() {
-        String direction = changePercent.signum() >= 0 ? "▲" : "▼";
+        String direction = switch (changePercent.signum()) {
+            case 1 -> "▲";
+            case -1 -> "▼";
+            default -> "▬";
+        };
         return instrument.getTicker() + ": " + price + " " + instrument.getCurrency()
                 + " " + direction + " " + changePercent.abs() + "%";
     }

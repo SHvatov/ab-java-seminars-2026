@@ -12,6 +12,8 @@ public abstract class Instrument {
     private final Currency currency;
 
     public Instrument(String ticker, String name, Currency currency) {
+        // NOTICE: тикер — инвариант объекта; без проверки здесь инструмент
+        // можно было бы создать в некорректном состоянии.
         if (ticker == null || ticker.isBlank()) {
             throw new IllegalArgumentException("Ticker cannot be blank");
         }
