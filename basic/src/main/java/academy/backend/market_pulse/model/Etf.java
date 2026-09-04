@@ -1,5 +1,8 @@
 package academy.backend.market_pulse.model;
 
+/**
+ * Биржевой фонд (ETF).
+ */
 public class Etf extends Instrument {
 
     private final String trackingIndex;
