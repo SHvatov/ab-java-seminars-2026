@@ -9,10 +9,10 @@ import academy.backend.market_pulse.repository.InstrumentRepository;
 import picocli.CommandLine;
 
 /**
- * Точка входа CLI. Команды регистрируются
- * вручную через {@code addSubcommand}, а не через атрибут {@code subcommands} аннотации
- * {@code @Command}: у команд нет конструктора без аргументов, picocli не смог бы создать их
- * самостоятельно по одному классу — каждой нужен уже готовый {@code repository}.
+ * Точка входа CLI. Команды регистрируются вручную через {@code addSubcommand}, а не через
+ * атрибут {@code subcommands} аннотации {@code @Command}: у команд нет конструктора без
+ * аргументов, picocli не смог бы создать их самостоятельно по одному классу — каждой нужен уже
+ * готовый {@code repository}.
  */
 public class Main {
 
