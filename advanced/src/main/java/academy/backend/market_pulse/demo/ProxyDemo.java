@@ -10,8 +10,8 @@ import academy.backend.market_pulse.repository.InMemoryInstrumentRepository;
 import academy.backend.market_pulse.repository.InstrumentRepository;
 
 /**
- * Демонстрация JDK Dynamic Proxy поверх {@link InstrumentRepository} — один из двух вариантов
- * этапа 5 «План семинара.md», семинар 2 (второй — {@link CglibProxyDemo}). Единственный
+ * Демонстрация JDK Dynamic Proxy поверх {@link InstrumentRepository} — один из двух
+ * автоматизированных вариантов проксирования (второй — {@link CglibProxyDemo}). Единственный
  * {@code InvocationHandler} перехватывает вызовы любого метода интерфейса без ручного
  * дублирования сигнатур.
  */

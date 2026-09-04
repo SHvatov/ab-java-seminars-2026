@@ -10,9 +10,9 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 /**
- * Демонстрация CGLIB поверх {@link InstrumentRepository} — второй из двух вариантов этапа 5
- * «План семинара.md», семинар 2 (первый — {@link ProxyDemo}). Генерирует подкласс целевого
- * класса во время выполнения — в отличие от JDK Dynamic Proxy, интерфейс не обязателен.
+ * Демонстрация CGLIB поверх {@link InstrumentRepository} — второй из двух автоматизированных
+ * вариантов проксирования (первый — {@link ProxyDemo}). Генерирует подкласс целевого класса во
+ * время выполнения — в отличие от JDK Dynamic Proxy, интерфейс не обязателен.
  */
 public class CglibProxyDemo {
 
