@@ -26,7 +26,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Разбор аргументов командной строки (семинар 2, этап 2) -->
+        <!-- Разбор аргументов командной строки -->
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
