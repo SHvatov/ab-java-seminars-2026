@@ -7,9 +7,8 @@ import academy.backend.market_pulse.model.Instrument;
 
 /**
  * Хранилище инструментов поверх внутреннего массива фиксированного размера. Перебор — через
- * {@link Iterable}/{@link Iterator}, без раскрытия массива наружу (см. «План семинара.md»,
- * семинар 2, этап 4 — Iterator). Заглушка: подключение реального источника данных запланировано
- * на семинар 5.
+ * {@link Iterable}/{@link Iterator}, без раскрытия массива наружу. Заглушка: подключение
+ * реального источника данных запланировано на семинар 5.
  */
 public class InstrumentRepository implements Iterable<Instrument> {
 

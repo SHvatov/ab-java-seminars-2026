@@ -4,8 +4,7 @@ import academy.backend.market_pulse.model.Currency;
 import academy.backend.market_pulse.model.Instrument;
 
 /**
- * Создание {@link Instrument} по строковому типу (см. «План семинара.md», семинар 2, этап 4 —
- * Factory Method).
+ * Создание {@link Instrument} по строковому типу.
  */
 public interface InstrumentFactory {
 
