@@ -12,8 +12,6 @@ public abstract class Instrument {
     private final Currency currency;
 
     public Instrument(String ticker, String name, Currency currency) {
-        // NOTICE: тикер — инвариант объекта; без проверки здесь инструмент
-        // можно было бы создать в некорректном состоянии.
         if (ticker == null || ticker.isBlank()) {
             throw new IllegalArgumentException("Ticker cannot be blank");
         }
@@ -35,6 +33,12 @@ public abstract class Instrument {
     }
 
     public abstract String getDescription();
+
+    /**
+     * Код типа инструмента ({@code STOCK}, {@code BOND}, {@code ETF}) — используется вместо
+     * {@code getClass().getSimpleName()} там, где нужно узнать тип, не завязываясь на рефлексию.
+     */
+    public abstract String getType();
 
     @Override
     public String toString() {
