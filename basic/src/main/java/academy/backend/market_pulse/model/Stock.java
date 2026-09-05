@@ -29,6 +29,11 @@ public class Stock extends Instrument implements DividendPaying {
         return "Акция, сектор: " + sector;
     }
 
+    @Override
+    public String getType() {
+        return "STOCK";
+    }
+
     /**
      * Годовая дивидендная доходность в валюте инструмента: цена × доходность / 100.
      */
