@@ -6,7 +6,6 @@ public class NoOpFilter implements InstrumentFilter {
 
     @Override
     public boolean matches(Instrument instrument) {
-        // TODO: подходят все инструменты без исключения (правило «без отбора»).
-        throw new UnsupportedOperationException("matches для NoOpFilter");
+        return true;
     }
 }
