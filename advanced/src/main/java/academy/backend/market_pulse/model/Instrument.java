@@ -34,6 +34,12 @@ public abstract class Instrument {
 
     public abstract String getDescription();
 
+    /**
+     * Код типа инструмента ({@code STOCK}, {@code BOND}, {@code ETF}) — используется вместо
+     * {@code getClass().getSimpleName()} там, где нужно узнать тип, не завязываясь на рефлексию.
+     */
+    public abstract String getType();
+
     @Override
     public String toString() {
         return ticker + " — " + name + " (" + getDescription() + ")";
