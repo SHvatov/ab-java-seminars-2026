@@ -12,7 +12,6 @@ public class TypeFilter implements InstrumentFilter {
 
     @Override
     public boolean matches(Instrument instrument) {
-        // TODO: инструмент подходит, если его getType() совпадает с type (без учёта регистра).
-        throw new UnsupportedOperationException("matches для TypeFilter");
+        return instrument.getType().equalsIgnoreCase(type);
     }
 }
