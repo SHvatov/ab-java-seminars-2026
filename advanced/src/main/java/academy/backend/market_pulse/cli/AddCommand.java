@@ -2,9 +2,7 @@ package academy.backend.market_pulse.cli;
 
 import java.util.concurrent.Callable;
 
-import academy.backend.market_pulse.factory.InstrumentFactories;
 import academy.backend.market_pulse.model.Currency;
-import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.repository.InstrumentRepository;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -32,9 +30,8 @@ public class AddCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        Instrument instrument = InstrumentFactories.create(type, ticker, name, currency);
-        repository.add(instrument);
-        System.out.println("Добавлено: " + instrument.getDescription());
-        return 0;
+        // TODO: создать инструмент через InstrumentFactories.create(type, ticker, name, currency)
+        //  и добавить его в repository (этап Factory Method).
+        throw new UnsupportedOperationException("call для AddCommand");
     }
 }
