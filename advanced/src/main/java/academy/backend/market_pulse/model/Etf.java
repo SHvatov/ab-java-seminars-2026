@@ -17,4 +17,9 @@ public class Etf extends Instrument {
     public String getDescription() {
         return "ETF, отслеживает индекс: " + trackingIndex;
     }
+
+    @Override
+    public String getType() {
+        return "ETF";
+    }
 }
